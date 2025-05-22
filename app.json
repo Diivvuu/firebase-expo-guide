@@ -26,7 +26,11 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.andrewheim.firebaseexpoguide",
-      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +42,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "55f4c500-f36f-49a5-aa1f-7d01dbe65c3a"
+      }
     }
   }
 }

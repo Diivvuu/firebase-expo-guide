@@ -143,11 +143,17 @@ export default function ChatsScreen() {
 
   const renderChatRoom = ({ item }: { item: ChatRoom }) => {
     const isOwnMessage = item.lastMessage.senderId === auth.currentUser?.uid;
-    const timestamp =
-      item.lastMessage.timestamp?.toDate?.()?.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      }) || '';
+
+    function formatTime(date: Date) {
+      let h = date.getHours();
+      const m = date.getMinutes();
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      const mm = m < 10 ? `0${m}` : m;
+      return `${h}:${mm} ${ampm}`;
+    }
+    const rawDate = item.lastMessage.timestamp?.toDate?.();
+    const timestamp = rawDate ? formatTime(rawDate) : '';
 
     return (
       <TouchableOpacity
@@ -177,7 +183,13 @@ export default function ChatsScreen() {
         <View style={styles.chatInfo}>
           <View style={styles.chatHeader}>
             <Text style={styles.userName}>{item.otherUserName}</Text>
-            <Text style={styles.timestamp}>{timestamp}</Text>
+            <Text
+              style={styles.timestamp}
+              numberOfLines={1}
+              ellipsizeMode="clip"
+            >
+              {timestamp}
+            </Text>
           </View>
           <View style={styles.messagePreview}>
             <Text
@@ -186,6 +198,7 @@ export default function ChatsScreen() {
                 item.unreadCount > 0 && styles.unreadMessage,
               ]}
               numberOfLines={1}
+              ellipsizeMode="tail"
             >
               {isOwnMessage ? 'You: ' : ''}
               {item.lastMessage.text}
@@ -313,7 +326,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginTop: 4,
+    flexShrink: 1,
+    minWidth: 30,
   },
+
   chatStatus: {
     alignItems: 'flex-end',
   },
@@ -350,7 +366,11 @@ const styles = StyleSheet.create({
   timestamp: {
     fontSize: 12,
     color: '#999',
+    minWidth: 56, // enough room for "12:00 PM"
+    textAlign: 'right',
+    includeFontPadding: false,
   },
+
   messagePreview: {
     flexDirection: 'row',
     alignItems: 'center',
